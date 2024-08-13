@@ -1,0 +1,6 @@
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv DATABASE_URL mongodb+srv://aslanyan200004:9jkjEoFOSonDyWWh@cluster0.5obha.mongodb.net/telegram_clicker?retryWrites=true&w=majority&appName=Cluster0
+SetEnv BOT_TOKEN 7254185928:AAF4qtqqc-UFTh5T_vX-4i3652IHfBYHt6U
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END
