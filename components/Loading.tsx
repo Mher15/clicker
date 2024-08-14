@@ -20,13 +20,8 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
   const fetchOrCreateUser = useCallback(async () => {
     try {
       let initData, telegramId, telegramName, startParam;
-      alert('001')
-      alert(typeof window !== 'undefined')
       if (typeof window !== 'undefined') {
         WebApp.ready();
-        alert('WebApp.initData')
-        alert(JSON.stringify(WebApp))
-        alert(JSON.stringify(WebApp.initDataUnsafe.user))
         initData = WebApp.initData;
         telegramId = WebApp.initDataUnsafe.user?.id.toString();
         telegramName = WebApp.initDataUnsafe.user?.first_name || 'Unknown User';
