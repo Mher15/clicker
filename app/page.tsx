@@ -6,6 +6,16 @@ import IceCube from '@/icons/IceCube';
 import Link from 'next/link';
 
 export default function Home() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://telegram.org/js/telegram-web-app.js';
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   return (
     <div className="bg-[#1d2025] flex justify-center items-center h-screen">
       <div className="w-full max-w-xl text-white flex flex-col items-center">
