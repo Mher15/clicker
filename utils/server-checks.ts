@@ -21,6 +21,8 @@ interface ValidationResult {
 
 export function validateTelegramWebAppData(telegramInitData: string): ValidationResult {
   const BOT_TOKEN = process.env.BOT_TOKEN;
+  alert('BOT_TOKEN',BOT_TOKEN)
+  console.log('BOT_TOKEN',BOT_TOKEN)
   const BYPASS_AUTH = process.env.BYPASS_TELEGRAM_AUTH === 'true';
 
   console.log("validateTelegramWebAppData");
