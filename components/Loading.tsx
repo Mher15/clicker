@@ -27,6 +27,7 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
         WebApp.ready();
         alert('WebApp.initData')
         alert(JSON.stringify(WebApp))
+        alert(JSON.stringify(WebApp.initDataUnsafe.user))
         initData = WebApp.initData;
         telegramId = WebApp.initDataUnsafe.user?.id.toString();
         telegramName = WebApp.initDataUnsafe.user?.first_name || 'Unknown User';
