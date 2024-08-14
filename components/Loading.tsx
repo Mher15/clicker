@@ -22,11 +22,11 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
     try {
       let initData, telegramId, username, telegramName, startParam;
 
-      alert(JSON.stringify(typeof window !== 'undefined'))
       if (typeof window !== 'undefined') {
         const WebApp = (await import('@twa-dev/sdk')).default;
         WebApp.ready();
         initData = WebApp.initData;
+        alert('initData',initData)
         telegramId = WebApp.initDataUnsafe.user?.id.toString();
         username = WebApp.initDataUnsafe.user?.username || 'Unknown User';
         telegramName = WebApp.initDataUnsafe.user?.first_name || 'Unknown User';
