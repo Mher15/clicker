@@ -35,7 +35,8 @@ export async function POST(req: Request) {
     }
 
     const telegramId = user.id?.toString();
-
+    alert(telegramId)
+    alert('JSON')
     if (!telegramId) {
         return NextResponse.json({ error: 'Invalid user data' }, { status: 400 });
     }
