@@ -76,6 +76,7 @@ export async function POST(req: Request) {
             additionalReferralPoints += isPremium ? LEVELS[i].friendBonusPremium : LEVELS[i].friendBonus;
           }
         }
+        console.log('telegramId_1',telegramId)
 
         dbUser = await prisma.user.update({
           where: { telegramId },
@@ -125,7 +126,7 @@ export async function POST(req: Request) {
             initialReferralPoints += isPremium ? LEVELS[i].friendBonusPremium : LEVELS[i].friendBonus;
           }
         }
-
+        console.log('telegramId_2',telegramId)
         dbUser = await prisma.user.create({
           data: {
             telegramId,
