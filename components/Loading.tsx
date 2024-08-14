@@ -20,10 +20,13 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
   const fetchOrCreateUser = useCallback(async () => {
     try {
       let initData, telegramId, telegramName, startParam;
-
+      alert('001')
+      alert(typeof window !== 'undefined')
       if (typeof window !== 'undefined') {
         const WebApp = (await import('@twa-dev/sdk')).default;
         WebApp.ready();
+        alert('WebApp.initData')
+        alert(WebApp.initData)
         initData = WebApp.initData;
         telegramId = WebApp.initDataUnsafe.user?.id.toString();
         telegramName = WebApp.initDataUnsafe.user?.first_name || 'Unknown User';
@@ -53,7 +56,7 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
       }
 
       const userData = await response.json();
-
+      
       console.log("user data: ", userData);
 
       if (!initData) {

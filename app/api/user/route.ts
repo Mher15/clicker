@@ -19,6 +19,7 @@ export async function POST(req: Request) {
   }
 
   const { validatedData, user: telegramUser } = validateTelegramWebAppData(telegramInitData);
+  console.log('telegramUser',telegramUser)
 
   if (!validatedData) {
     return NextResponse.json({ error: 'Invalid Telegram data' }, { status: 403 });
