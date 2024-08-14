@@ -26,7 +26,7 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
         const WebApp = (await import('@twa-dev/sdk')).default;
         WebApp.ready();
         initData = WebApp.initData;
-        alert('initData',initData)
+        alert(initData)
         telegramId = WebApp.initDataUnsafe.user?.id.toString();
         username = WebApp.initDataUnsafe.user?.username || 'Unknown User';
         telegramName = WebApp.initDataUnsafe.user?.first_name || 'Unknown User';
