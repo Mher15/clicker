@@ -13,8 +13,6 @@ export async function POST(req: Request) {
   const { telegramInitData, referrerTelegramId } = body;
 
   console.log("Request body:", body);
-  console.log("Telegram Init Data:", telegramInitData);
-  console.log("Referrer Telegram ID:", referrerTelegramId);
 
   if (!telegramInitData) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
@@ -22,20 +20,16 @@ export async function POST(req: Request) {
 
   const { validatedData, user: telegramUser } = validateTelegramWebAppData(telegramInitData);
 
-  console.log("Validated data", validatedData);
-  console.log("User", telegramUser);
-
   if (!validatedData) {
     return NextResponse.json({ error: 'Invalid Telegram data' }, { status: 403 });
   }
 
-  console.log("User: ", telegramUser);
-
-  const telegramId = telegramUser.id?.toString();
-
-  if (!telegramId) {
+  if (!telegramUser?.id) {
     return NextResponse.json({ error: 'Invalid user data' }, { status: 400 });
   }
+
+  const telegramId = telegramUser.id.toString();
+  const isPremium = telegramUser?.is_premium || false;
 
   try {
     const dbUserUpdated = await prisma.$transaction(async (prisma) => {
@@ -47,7 +41,6 @@ export async function POST(req: Request) {
       const currentTime = new Date();
 
       if (dbUser) {
-        // Existing user logic
         const minedPoints = calculateMinedPoints(
           dbUser.mineLevelIndex,
           dbUser.lastPointsUpdateTimestamp.getTime(),
@@ -67,22 +60,18 @@ export async function POST(req: Request) {
           currentTime.getUTCMonth() !== lastRefillDate.getUTCMonth() ||
           currentTime.getUTCFullYear() !== lastRefillDate.getUTCFullYear();
 
-        const isPremium =  telegramUser?.is_premium || false;
-
-        // Calculate additional referral points if user leveled up
         let additionalReferralPoints = 0;
         if (newLevelIndex > oldLevelIndex) {
           for (let i = oldLevelIndex + 1; i <= newLevelIndex; i++) {
             additionalReferralPoints += isPremium ? LEVELS[i].friendBonusPremium : LEVELS[i].friendBonus;
           }
         }
-        console.log('telegramId_1',telegramId)
 
         dbUser = await prisma.user.update({
           where: { telegramId },
           data: {
-            name: telegramUser?.first_name || "",
-            isPremium: isPremium,
+            name: telegramUser.first_name || "",
+            isPremium,
             points: newPoints,
             pointsBalance: { increment: minedPoints },
             offlinePointsEarned: minedPoints,
@@ -96,7 +85,6 @@ export async function POST(req: Request) {
           include: { referredBy: true },
         });
 
-        // Update referrer's points if user leveled up
         if (additionalReferralPoints > 0 && dbUser.referredBy) {
           await prisma.user.update({
             where: { id: dbUser.referredBy.id },
@@ -107,7 +95,6 @@ export async function POST(req: Request) {
           });
         }
       } else {
-        // New user creation
         let referredByUser = null;
         if (referrerTelegramId) {
           referredByUser = await prisma.user.findUnique({
@@ -115,22 +102,20 @@ export async function POST(req: Request) {
           });
         }
 
-        const isPremium = telegramUser?.is_premium || false;
         const referralBonus = referredByUser ? (isPremium ? REFERRAL_BONUS_PREMIUM : REFERRAL_BONUS_BASE) : 0;
         const initialLevel = calculateLevelIndex(referralBonus);
 
-        // Calculate initial referral points
         let initialReferralPoints = referralBonus;
         if (referredByUser) {
           for (let i = 1; i <= initialLevel; i++) {
             initialReferralPoints += isPremium ? LEVELS[i].friendBonusPremium : LEVELS[i].friendBonus;
           }
         }
-        console.log('telegramId_2',telegramId)
+
         dbUser = await prisma.user.create({
           data: {
             telegramId,
-            name: telegramUser?.first_name || "",
+            name: telegramUser.first_name || "",
             isPremium,
             points: referralBonus,
             pointsBalance: referralBonus,
@@ -150,7 +135,6 @@ export async function POST(req: Request) {
         });
 
         if (referredByUser) {
-          // Reward the referrer
           await prisma.user.update({
             where: { id: referredByUser.id },
             data: {
