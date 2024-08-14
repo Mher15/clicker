@@ -1,4 +1,3 @@
-// components/Loading.tsx
 'use client'
 
 import { useEffect, useState, useRef, useCallback } from 'react';
@@ -20,26 +19,24 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
 
   const fetchOrCreateUser = useCallback(async () => {
     try {
-      let initData, telegramId, username, telegramName, startParam;
+      let initData, telegramId, telegramName, startParam;
 
       if (typeof window !== 'undefined') {
         const WebApp = (await import('@twa-dev/sdk')).default;
         WebApp.ready();
         initData = WebApp.initData;
-        alert(initData)
         telegramId = WebApp.initDataUnsafe.user?.id.toString();
-        username = WebApp.initDataUnsafe.user?.username || 'Unknown User';
         telegramName = WebApp.initDataUnsafe.user?.first_name || 'Unknown User';
 
         startParam = WebApp.initDataUnsafe.start_param;
       }
-
 
       const referrerTelegramId = startParam ? startParam.replace('kentId', '') : null;
 
       if (process.env.NEXT_PUBLIC_BYPASS_TELEGRAM_AUTH === 'true') {
         initData = "temp";
       }
+
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
@@ -50,14 +47,15 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
           referrerTelegramId,
         }),
       });
+
       if (!response.ok) {
         throw new Error('Failed to fetch or create user');
       }
+
       const userData = await response.json();
 
       console.log("user data: ", userData);
 
-      // Check if initData and telegramName are defined
       if (!initData) {
         throw new Error('initData is undefined');
       }
@@ -65,7 +63,6 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
         throw new Error('telegramName is undefined');
       }
 
-      // Create the game store with fetched data
       const initialState: InitialGameState = {
         userTelegramInitData: initData,
         userTelegramName: telegramName,
@@ -93,7 +90,7 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
       console.error('Error fetching user data:', error);
       // Handle error (e.g., show error message to user)
     }
-  }, [initializeState]);
+  }, [initializeState, setCurrentView, setIsInitialized]);
 
   useEffect(() => {
     fetchOrCreateUser();
