@@ -23,7 +23,6 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
       alert('001')
       alert(typeof window !== 'undefined')
       if (typeof window !== 'undefined') {
-        const WebApp = (await import('@twa-dev/sdk')).default;
         WebApp.ready();
         alert('WebApp.initData')
         alert(JSON.stringify(WebApp))

@@ -1,5 +1,5 @@
 'use client'
-
+import {useEffect} from 'react'
 import Image from 'next/image';
 import { mainCharacter } from '@/images';
 import IceCube from '@/icons/IceCube';
