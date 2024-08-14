@@ -36,14 +36,16 @@ export default function Loading({ setIsInitialized, setCurrentView }: LoadingPro
 
       const referrerTelegramId = startParam ? startParam.replace('kentId', '') : null;
 
-      initData = "temp";
+      if (process.env.NEXT_PUBLIC_BYPASS_TELEGRAM_AUTH === 'true') {
+        initData = "temp";
+      }
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          telegramInitData: initData ? initData : 'temp',
+          telegramInitData: initData,
           referrerTelegramId,
         }),
       });
