@@ -35,21 +35,25 @@ export function validateTelegramWebAppData(telegramInitData: string): Validation
     user = { id: 'undefined', username: 'Unknown User' };
     message = 'Authentication bypassed for development';
   } else {
+    console.log('BOT_TOKEN',BOT_TOKEN)
     if (!BOT_TOKEN) {
       return { message: 'BOT_TOKEN is not set', validatedData: null, user: {} };
     }
+    console.log('0001')
 
     const initData = new URLSearchParams(telegramInitData);
+    console.log('0002')
     const hash = initData.get('hash');
-    
+    console.log('0003')
     if (!hash) {
       return { message: 'Hash is missing from initData', validatedData: null, user: {} };
     }
 
     initData.delete('hash');
-
+    console.log('0004')
     // Check if auth_date is present and not older than 3 hours
     const authDate = initData.get('auth_date');
+    console.log('0005')
     if (!authDate) {
       return { message: 'auth_date is missing from initData', validatedData: null, user: {} };
     }
